@@ -1,0 +1,12 @@
+# 本地临时测试文件
+temp/
+temp.js
+*.temp.js
+
+# 开发配置文件
+.editorconfig
+.eslintignore
+.eslintrc
+.gitignore
+.prettierignore
+.prettierrc
