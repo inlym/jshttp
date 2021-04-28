@@ -1,8 +1,9 @@
-/build/**
-/coverage/**
-/docs/**
-/jsdoc/**
-/templates/**
-/tmp/**
-/temp/**
-temp.js
+
+# 特定目录
+node_modules/
+temp/
+
+# 特定后缀
+*.temp.js
+*.debug.js
+*.min.js
