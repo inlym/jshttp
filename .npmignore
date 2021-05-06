@@ -10,3 +10,9 @@ temp.js
 .gitignore
 .prettierignore
 .prettierrc
+
+# 文档目录
+docs/
+
+# 测试目录
+test/
