@@ -205,7 +205,7 @@ jshttp.get('https://debub.inlym.com/request?id=1').then((res) => {
   /**
    * 重试次数
    *
-   * 使用 `validateStatus` 方法对响应结果进行校验，校验不通过则重试。建议配置中间件的 `ctx.retries` （当前重试次数）属性操作，当其大于 0 时，进行若干操作。
+   * 使用 `validateStatus` 方法对响应结果进行校验，校验不通过则重试。建议配合中间件的 `ctx.retries` （当前重试次数）属性操作，当其大于 0 时，进行若干操作。
    */
   retry: 0,
 
