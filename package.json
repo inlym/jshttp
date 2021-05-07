@@ -1,6 +1,6 @@
 {
   "name": "jshttp",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "能在任何 Javascript 环境使用的 HTTP 请求库，支持 Node.js，浏览器，微信小程序，支付宝小程序，百度小程序 ...",
   "main": "index.js",
   "scripts": {
