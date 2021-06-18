@@ -21,6 +21,10 @@ export interface JsHttpRequestConfig extends AxiosRequestConfig {
   signature?: SignatureOptions
 }
 
+export interface JsHttpResponse extends AxiosResponse {
+  config: JsHttpRequestConfig
+}
+
 // 重写跟 `AxiosRequestConfig` 相关的类型
 export interface JsHttpInstance {
   (config: JsHttpRequestConfig): AxiosPromise
@@ -28,17 +32,17 @@ export interface JsHttpInstance {
   defaults: JsHttpRequestConfig
   interceptors: {
     request: AxiosInterceptorManager<JsHttpRequestConfig>
-    response: AxiosInterceptorManager<AxiosResponse>
+    response: AxiosInterceptorManager<JsHttpResponse>
   }
   getUri(config?: JsHttpRequestConfig): string
-  request<T = any, R = AxiosResponse<T>>(config: JsHttpRequestConfig): Promise<R>
-  get<T = any, R = AxiosResponse<T>>(url: string, config?: JsHttpRequestConfig): Promise<R>
-  delete<T = any, R = AxiosResponse<T>>(url: string, config?: JsHttpRequestConfig): Promise<R>
-  head<T = any, R = AxiosResponse<T>>(url: string, config?: JsHttpRequestConfig): Promise<R>
-  options<T = any, R = AxiosResponse<T>>(url: string, config?: JsHttpRequestConfig): Promise<R>
-  post<T = any, R = AxiosResponse<T>>(url: string, data?: any, config?: JsHttpRequestConfig): Promise<R>
-  put<T = any, R = AxiosResponse<T>>(url: string, data?: any, config?: JsHttpRequestConfig): Promise<R>
-  patch<T = any, R = AxiosResponse<T>>(url: string, data?: any, config?: JsHttpRequestConfig): Promise<R>
+  request<T = any, R = JsHttpResponse<T>>(config: JsHttpRequestConfig): Promise<R>
+  get<T = any, R = JsHttpResponse<T>>(url: string, config?: JsHttpRequestConfig): Promise<R>
+  delete<T = any, R = JsHttpResponse<T>>(url: string, config?: JsHttpRequestConfig): Promise<R>
+  head<T = any, R = JsHttpResponse<T>>(url: string, config?: JsHttpRequestConfig): Promise<R>
+  options<T = any, R = JsHttpResponse<T>>(url: string, config?: JsHttpRequestConfig): Promise<R>
+  post<T = any, R = JsHttpResponse<T>>(url: string, data?: any, config?: JsHttpRequestConfig): Promise<R>
+  put<T = any, R = JsHttpResponse<T>>(url: string, data?: any, config?: JsHttpRequestConfig): Promise<R>
+  patch<T = any, R = JsHttpResponse<T>>(url: string, data?: any, config?: JsHttpRequestConfig): Promise<R>
 }
 
 export interface JsHttpStatic extends JsHttpInstance {

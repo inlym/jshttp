@@ -11,6 +11,10 @@ temp.js
 .prettierignore
 .prettierrc
 
+# 依赖文件
+node_modules/
+jspm_packages/
+
 # 文档目录
 docs/
 
