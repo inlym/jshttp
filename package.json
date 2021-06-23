@@ -1,6 +1,6 @@
 {
   "name": "jshttp",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "基于 Axios 的 HTTP 请求库，内置了一些常用功能，支持在任何 Javascript 环境下运行",
   "main": "index.js",
   "typings": "./index.d.ts",
