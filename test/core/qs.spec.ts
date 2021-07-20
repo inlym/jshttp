@@ -1,4 +1,4 @@
-import { decodeQueryString, encodeQueryObject, standardEncoding } from '../src/core/qs'
+import { decodeQueryString, encodeQueryObject, standardEncoding } from '../../src/core/qs'
 
 describe('core/qs.ts', () => {
   describe('encodeQueryObject', () => {
