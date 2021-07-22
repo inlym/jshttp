@@ -300,7 +300,6 @@ jshttp.get('https://debub.inlym.com/request?id=1').then((res) => {
    * ```
    */
   responseItems: ['status', 'statusText', 'headers', 'data'],
-
 }
 ````
 
