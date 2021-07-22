@@ -40,7 +40,12 @@ export function encodeQueryObject(query: Record<string, any>): string {
       } else if (value instanceof Date) {
         result = value.toISOString()
       } else if (Array.isArray(value)) {
-        // 复用 `angular` 对数组参数的处理逻辑
+        /**
+         * 此处复用 `angular` 对数组参数的处理逻辑
+         *
+         * [axios]:    { arr: ['one', 'two', 'three']} => arr[]=one&arr[]=two&arr[]=three
+         * [angular]:  { arr: ['one', 'two', 'three']} => arr=one,two,three
+         */
         result = value.join(',')
       }
 

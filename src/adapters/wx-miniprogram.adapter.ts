@@ -3,4 +3,8 @@
  * @see [`API 文档`](https://developers.weixin.qq.com/miniprogram/dev/api/network/request/wx.request.html)
  */
 
-export function wxMiniProgramAdapter(config: any) {}
+import { AxiosRequestConfig } from 'axios'
+import { statuses } from '../core/status.constant'
+import { settle, createError } from '../core/axios-methods'
+
+export function wxMiniProgramAdapter(config: AxiosRequestConfig) {}
