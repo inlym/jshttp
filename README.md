@@ -13,7 +13,7 @@
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/inlym/jshttp)
 ![GitHub Repo stars](https://img.shields.io/github/stars/inlym/jshttp?style=social)
 
-`JsHttp` 是一个基于 `Axios` 的 `Javascript` HTTP 请求库，支持在任何 `Javascript` 环境中发起 HTTP 请求（目前已支持 `Node.js`，`浏览器`，各大平台小程序，包含`微信`、`QQ`、`支付宝`、`字节跳动`等平台），在各个环境提供完全一致 `API`。
+`JsHttp` 是一个面向未来的新一代 HTTP 请求客户端，支持 TypeScript，支持在任何 `Javascript` 环境中发起 HTTP 请求（目前已支持 `Node.js`，`浏览器`，各大平台小程序，包含`微信`、`QQ`、`支付宝`、`字节跳动`等平台），在各个环境提供完全一致 `API`。
 
 ## 目录
 

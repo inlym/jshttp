@@ -1,9 +1,8 @@
 {
   "name": "jshttp",
-  "version": "0.6.0",
-  "description": "基于 Axios 的 HTTP 请求库，内置了一些常用功能，支持在任何 Javascript 环境下运行",
-  "main": "index.js",
-  "typings": "./index.d.ts",
+  "version": "0.9.0",
+  "description": "面向未来的新一代 HTTP 请求客户端，支持 TypeScript",
+  "main": "dist/index.js",
   "scripts": {
     "gp": "git push && git push --tag",
     "publish-to-npm": "nrm use npm && npm publish"
@@ -13,12 +12,12 @@
     "url": "git+https://github.com/inlym/jshttp.git"
   },
   "keywords": [
-    "axios",
     "request",
     "http",
     "https",
     "miniprogram",
     "node",
+    "axios",
     "inlym"
   ],
   "author": "inlym <inlym@qq.com>",
