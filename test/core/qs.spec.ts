@@ -1,6 +1,23 @@
 import { decodeQueryString, encodeQueryObject, standardEncoding } from '../../src/core/qs'
 
-describe('core/qs.ts', () => {
+describe('src/core/qs', () => {
+  describe('standardEncoding', () => {
+    test('特定字符（@,:,$,,,;,+,=,?,/）未被转码', () => {
+      const arr = ['@', ':', '$', ',', ';', '+', '=', '?', '/']
+      arr.forEach((c) => {
+        expect(standardEncoding(c)).toBe(c)
+      })
+    })
+
+    test('常见的几种情况的字符转码正确', () => {
+      const arr = ['abc', '我', '!', '=', ' ', '%']
+      const expectedArr = ['abc', '%E6%88%91', '!', '=', '%20', '%25']
+      for (let i = 0; i < arr.length; i++) {
+        expect(standardEncoding(arr[i])).toBe(expectedArr[i])
+      }
+    })
+  })
+
   describe('encodeQueryObject', () => {
     test('转化一个普通对象', () => {
       const obj = {
@@ -54,33 +71,6 @@ describe('core/qs.ts', () => {
 
     test('普通标准格式查询字符串转化', () => {
       expect(decodeQueryString(querystring)).toEqual(expected)
-    })
-
-    test('查询字符串前包含带 `?` 符号和 path', () => {
-      const url = 'https://www.jshttp.cn/path/to?' + querystring
-      expect(decodeQueryString(url)).toEqual(expected)
-    })
-
-    test('查询字符串后包含带 `#` 符号和其他内容', () => {
-      const url = querystring + '#firststep'
-      expect(decodeQueryString(url)).toEqual(expected)
-    })
-  })
-
-  describe('standardEncoding', () => {
-    test('特定字符（@,:,$,,,;,+,=,?,/）未被转码', () => {
-      const arr = ['@', ':', '$', ',', ';', '+', '=', '?', '/']
-      arr.forEach((c) => {
-        expect(standardEncoding(c)).toBe(c)
-      })
-    })
-
-    test('常见的几种情况的字符转码正确', () => {
-      const arr = ['abc', '我', '!', '=', ' ', '%']
-      const expectedArr = ['abc', '%E6%88%91', '!', '=', '%20', '%25']
-      for (let i = 0; i < arr.length; i++) {
-        expect(standardEncoding(arr[i])).toBe(expectedArr[i])
-      }
     })
   })
 })

@@ -21,15 +21,32 @@ export interface QueryParts {
   value: string
 }
 
-export function encodeQueryObject(query: Record<string, any>): string {
+/**
+ * 将查询对象转化为查询字符串
+ *
+ * @description
+ * 将以下格式的普通对象，
+ * ```
+ * {
+ *    name: 'inlym',
+ *    age: 19,
+ *    isGood: true,
+ *    nickname: 'goodboy',
+ *    address: 'YourHeart',
+ * }
+ * ```
+ *
+ * 转为为字符串 `address=YourHeart&age=19&isGood=true&name=inlym&nickname=goodboy`
+ */
+export function encodeQueryObject(query: Record<string, string | number | boolean | string[] | Date>): string {
   if (typeof query !== 'object') {
     throw new Error('`params` 参数应该是一个标准对象！')
   }
 
   return Object.keys(query)
     .map((key: string): QueryParts => {
-      const value: any = query[key]
-      let result: string = ''
+      const value: string | number | boolean | string[] | Date = query[key]
+      let result = ''
 
       if (typeof value === 'string') {
         result = value
@@ -58,11 +75,17 @@ export function encodeQueryObject(query: Record<string, any>): string {
     .join('&')
 }
 
+/**
+ * 将查询字符串解析为对象格式
+ *
+ * @param str 查询字符串
+ */
 export function decodeQueryString(str: string): Record<string, string> {
-  const firstIndex: number = str.indexOf('?') === -1 ? 0 : str.indexOf('?') + 1
-  const lastIndex: number = str.indexOf('#') === -1 ? str.length : str.indexOf('#')
-  const querystring: string = str.substring(firstIndex, lastIndex)
-  return querystring
+  if (str.indexOf('?') !== -1 || str.indexOf('#') !== -1 || typeof str !== 'string') {
+    throw new Error('内部错误：待解析的查询字符串不是标准格式或者包含 `?` 或 `#` ！')
+  }
+
+  return str
     .split('&')
     .map((s: string): string => decodeURIComponent(s))
     .map((s: string): string[] => s.split('='))
