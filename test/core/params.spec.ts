@@ -1,6 +1,6 @@
-import { decodeQueryString, encodeQueryObject, standardEncoding } from '../../src/core/qs'
+import { Params, standardEncoding } from '../../src/core/params'
 
-describe('src/core/qs', () => {
+describe('src/core/params', () => {
   describe('standardEncoding', () => {
     test('特定字符（@,:,$,,,;,+,=,?,/）未被转码', () => {
       const arr = ['@', ':', '$', ',', ';', '+', '=', '?', '/']
@@ -18,13 +18,13 @@ describe('src/core/qs', () => {
     })
   })
 
-  describe('encodeQueryObject', () => {
+  describe('encode', () => {
     test('转化一个普通对象', () => {
       const obj = {
         name: 'inlym',
         age: 19,
       }
-      expect(encodeQueryObject(obj)).toBe('age=19&name=inlym')
+      expect(Params.encode(obj)).toBe('age=19&name=inlym')
     })
 
     test('混乱的对象键名顺序，转化结果按字典排序', () => {
@@ -35,19 +35,19 @@ describe('src/core/qs', () => {
         nickname: 'goodboy',
         address: 'YourHeart',
       }
-      expect(encodeQueryObject(obj)).toBe('address=YourHeart&age=19&isGood=true&name=inlym&nickname=goodboy')
+      expect(Params.encode(obj)).toBe('address=YourHeart&age=19&isGood=true&name=inlym&nickname=goodboy')
     })
 
     test('空对象转化为空字符串', () => {
       const obj = {}
-      expect(encodeQueryObject(obj)).toBe('')
+      expect(Params.encode(obj)).toBe('')
     })
 
     test('数组类型转化为以逗号分隔的字符串', () => {
       const obj = {
         arr: ['one', 'two', 'three'],
       }
-      expect(encodeQueryObject(obj)).toBe('arr=one,two,three')
+      expect(Params.encode(obj)).toBe('arr=one,two,three')
     })
 
     test('日期类型转化为符合 ISO 8601 扩展格式的字符串', () => {
@@ -55,11 +55,11 @@ describe('src/core/qs', () => {
       const obj = {
         date: new Date(timestamp),
       }
-      expect(encodeQueryObject(obj)).toBe('date=2021-07-20T02:28:16.042Z')
+      expect(Params.encode(obj)).toBe('date=2021-07-20T02:28:16.042Z')
     })
   })
 
-  describe('decodeQueryString', () => {
+  describe('Params.decode', () => {
     const querystring = 'address=YourHeart&age=19&isGood=true&name=inlym&nickname=goodboy'
     const expected = {
       name: 'inlym',
@@ -70,7 +70,7 @@ describe('src/core/qs', () => {
     }
 
     test('普通标准格式查询字符串转化', () => {
-      expect(decodeQueryString(querystring)).toEqual(expected)
+      expect(Params.decode(querystring)).toEqual(expected)
     })
   })
 })
