@@ -28,7 +28,7 @@ export interface QueryParts {
 /**
  * 请求参数
  */
-export class Params {
+export class HttpParams {
   private readonly params = new Map<string, ParamsValueType>()
 
   constructor(init?: Record<string, ParamsValueType>) {
@@ -39,7 +39,7 @@ export class Params {
     }
   }
 
-  set(field: string, value: ParamsValueType): Params {
+  set(field: string, value: ParamsValueType): HttpParams {
     this.params.set(field, value)
     return this
   }
@@ -53,7 +53,7 @@ export class Params {
     return Params.stringify(result)
   }
 
-  remove(field: string): Params {
+  remove(field: string): HttpParams {
     this.params.delete(field)
     return this
   }

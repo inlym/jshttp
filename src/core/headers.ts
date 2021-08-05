@@ -18,7 +18,7 @@
  * 1. 请求头字段名不区分大小写。
  * ```
  */
-export class Headers {
+export class HttpHeaders {
   private readonly headers = new Map<string, string>()
 
   constructor(init?: Record<string, string>) {
@@ -72,7 +72,7 @@ export class Headers {
    *   .set('field-three', '1234567')
    * ```
    */
-  set(field: string, value: string): Headers {
+  set(field: string, value: string): HttpHeaders {
     const stringifiedValue = String(value)
     if (stringifiedValue) {
       this.headers.set(field.toLowerCase(), stringifiedValue)
@@ -118,7 +118,7 @@ export class Headers {
    *
    * ```
    */
-  remove(field: string): Headers {
+  remove(field: string): HttpHeaders {
     this.headers.delete(field.toLowerCase())
     return this
   }

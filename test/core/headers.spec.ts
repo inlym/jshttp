@@ -1,4 +1,4 @@
-import { Headers } from '../../src/core/headers'
+import { HttpHeaders } from '../../src/core/headers'
 
 describe('src/core/headers', () => {
   describe('带初始值创建实例', () => {
@@ -8,7 +8,7 @@ describe('src/core/headers', () => {
       'X-My-Header': 'hello',
     }
 
-    const myHeaders = new Headers(initHeaders)
+    const myHeaders = new HttpHeaders(initHeaders)
 
     test('实例创建成功', () => {
       expect(myHeaders).toBeDefined()
@@ -69,7 +69,7 @@ describe('src/core/headers', () => {
   })
 
   describe('不带初始值创建实例', () => {
-    const myHeaders = new Headers()
+    const myHeaders = new HttpHeaders()
 
     test('实例创建成功', () => {
       expect(myHeaders).toBeDefined()
