@@ -1,5 +1,5 @@
 /** 参数值的数据类型 */
-export type ParamsValueType = string | number | boolean | string[] | Date
+export type ParamsValueType = string | number | boolean | Array<string | number | boolean> | Date
 
 /**
  * 以下 `standardEncoding` 方法来源于 `angular` （觉得还不错，就直接复制过来了）
@@ -29,8 +29,68 @@ export interface QueryParts {
  * 请求参数
  */
 export class Params {
+  private readonly params = new Map<string, ParamsValueType>()
+
   constructor(init?: Record<string, ParamsValueType>) {
-    console.log(init)
+    if (init) {
+      Object.keys(init).forEach((field: string) => {
+        this.set(field, init[field])
+      })
+    }
+  }
+
+  set(field: string, value: ParamsValueType): Params {
+    this.params.set(field, value)
+    return this
+  }
+
+  getValue(field: string): ParamsValueType {
+    return this.params.get(field)
+  }
+
+  get(field: string): string {
+    const result = this.params.get(field)
+    return Params.stringify(result)
+  }
+
+  remove(field: string): Params {
+    this.params.delete(field)
+    return this
+  }
+
+  toJSON(): Record<string, string> {
+    const result: Record<string, string> = {}
+    this.params.forEach((value: ParamsValueType, field: string) => {
+      result[field] = Params.stringify(value)
+    })
+    return result
+  }
+
+  /**
+   * 对不同数据类型的值进行字符串化
+   *
+   * @param value 原始值
+   */
+  static stringify(value: ParamsValueType): string {
+    if (typeof value === 'number') {
+      return String(value)
+    } else if (typeof value === 'boolean') {
+      return value ? 'true' : 'false'
+    } else if (typeof value === 'string') {
+      return value
+    } else if (value instanceof Date) {
+      return value.toISOString()
+    } else if (Array.isArray(value)) {
+      /**
+       * 此处复用 `angular` 对数组参数的处理逻辑
+       *
+       * [axios]:    { arr: ['one', 'two', 'three']} => arr[]=one&arr[]=two&arr[]=three
+       * [angular]:  { arr: ['one', 'two', 'three']} => arr=one,two,three
+       */
+      return value.map((v: unknown) => String(v)).join(',')
+    }
+
+    return ''
   }
 
   /**
@@ -52,35 +112,15 @@ export class Params {
    *
    * 转为为字符串 `address=YourHeart&age=19&isGood=true&name=inlym&nickname=goodboy`
    */
-  static encode(query: Record<string, string | number | boolean | string[] | Date>): string {
+  static encode(query: Record<string, ParamsValueType>): string {
     if (typeof query !== 'object') {
       throw new Error('`params` 参数应该是一个标准对象！')
     }
 
     return Object.keys(query)
       .map((key: string): QueryParts => {
-        const value: string | number | boolean | string[] | Date = query[key]
-        let result = ''
-
-        if (typeof value === 'string') {
-          result = value
-        } else if (typeof value === 'number') {
-          result = value.toString()
-        } else if (typeof value === 'boolean') {
-          result = value ? 'true' : 'false'
-        } else if (value instanceof Date) {
-          result = value.toISOString()
-        } else if (Array.isArray(value)) {
-          /**
-           * 此处复用 `angular` 对数组参数的处理逻辑
-           *
-           * [axios]:    { arr: ['one', 'two', 'three']} => arr[]=one&arr[]=two&arr[]=three
-           * [angular]:  { arr: ['one', 'two', 'three']} => arr=one,two,three
-           */
-          result = value.join(',')
-        }
-
-        return { key, value: result }
+        const value: string = Params.stringify(query[key])
+        return { key, value }
       })
       .filter((obj: QueryParts): boolean => !!obj.value)
       .map((obj: QueryParts): string => `${obj.key}=${obj.value}`)
