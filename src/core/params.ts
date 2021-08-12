@@ -1,5 +1,5 @@
 /** 参数值的数据类型 */
-export type ParamsValueType = string | number | boolean | Array<string | number | boolean> | Date
+export type ParamsValueType = string | number | boolean | Date
 
 /**
  * 以下 `standardEncoding` 方法来源于 `angular` （觉得还不错，就直接复制过来了）
@@ -29,30 +29,55 @@ export interface QueryParts {
  * 请求参数
  */
 export class HttpParams {
-  private readonly params = new Map<string, ParamsValueType>()
+  private readonly params = new Map<string, string | number | boolean | Date>()
 
-  constructor(init?: Record<string, ParamsValueType>) {
+  constructor(init?: Record<string, string | number | boolean | Date> | HttpParams) {
     if (init) {
+      if (init instanceof HttpParams) {
+        return init
+      }
+
       Object.keys(init).forEach((field: string) => {
         this.set(field, init[field])
       })
     }
   }
 
-  set(field: string, value: ParamsValueType): HttpParams {
+  /**
+   * 设置请求参数
+   */
+  set(field: string, value: string | number | boolean | Date): HttpParams {
     this.params.set(field, value)
     return this
   }
 
-  getValue(field: string): ParamsValueType {
+  /**
+   * 查看一个请求参数的值（注意：值以字符串化）
+   *
+   * @param field 字段名
+   */
+  get(field: string): string {
+    const origin = this.params.get(field)
+    if (origin === undefined) {
+      return ''
+    }
+    return HttpParams.stringify(origin)
+  }
+
+  /**
+   * 获取请求参数的原始值
+   *
+   * @param field 字段名
+   */
+  getOrigin(field: string): string | number | boolean | Date | undefined {
     return this.params.get(field)
   }
 
-  get(field: string): string {
-    const result = this.params.get(field)
-    return Params.stringify(result)
-  }
-
+  /**
+   * 移除一个请求参数
+   *
+   * @param field 字段名
+   */
   remove(field: string): HttpParams {
     this.params.delete(field)
     return this
@@ -60,10 +85,14 @@ export class HttpParams {
 
   toJSON(): Record<string, string> {
     const result: Record<string, string> = {}
-    this.params.forEach((value: ParamsValueType, field: string) => {
-      result[field] = Params.stringify(value)
+    this.params.forEach((value: string | number | boolean | Date, field: string) => {
+      result[field] = HttpParams.stringify(value)
     })
     return result
+  }
+
+  toString(): string {
+    return HttpParams.encode(this.toJSON())
   }
 
   /**
@@ -71,7 +100,7 @@ export class HttpParams {
    *
    * @param value 原始值
    */
-  static stringify(value: ParamsValueType): string {
+  static stringify(value: string | number | boolean | Date): string {
     if (typeof value === 'number') {
       return String(value)
     } else if (typeof value === 'boolean') {
@@ -80,14 +109,8 @@ export class HttpParams {
       return value
     } else if (value instanceof Date) {
       return value.toISOString()
-    } else if (Array.isArray(value)) {
-      /**
-       * 此处复用 `angular` 对数组参数的处理逻辑
-       *
-       * [axios]:    { arr: ['one', 'two', 'three']} => arr[]=one&arr[]=two&arr[]=three
-       * [angular]:  { arr: ['one', 'two', 'three']} => arr=one,two,three
-       */
-      return value.map((v: unknown) => String(v)).join(',')
+    } else {
+      // 空
     }
 
     return ''
@@ -112,14 +135,14 @@ export class HttpParams {
    *
    * 转为为字符串 `address=YourHeart&age=19&isGood=true&name=inlym&nickname=goodboy`
    */
-  static encode(query: Record<string, ParamsValueType>): string {
+  static encode(query: Record<string, string | number | boolean | Date>): string {
     if (typeof query !== 'object') {
       throw new Error('`params` 参数应该是一个标准对象！')
     }
 
     return Object.keys(query)
       .map((key: string): QueryParts => {
-        const value: string = Params.stringify(query[key])
+        const value: string = HttpParams.stringify(query[key])
         return { key, value }
       })
       .filter((obj: QueryParts): boolean => !!obj.value)

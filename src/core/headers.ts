@@ -21,8 +21,12 @@
 export class HttpHeaders {
   private readonly headers = new Map<string, string>()
 
-  constructor(init?: Record<string, string>) {
+  constructor(init?: Record<string, string> | HttpHeaders) {
     if (init) {
+      if (init instanceof HttpHeaders) {
+        return init
+      }
+
       Object.keys(init).forEach((field: string) => {
         this.set(field, init[field])
       })
