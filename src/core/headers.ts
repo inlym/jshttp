@@ -1,4 +1,16 @@
 /**
+ * HTTP 请求头接口
+ */
+export interface HttpHeadersBase {
+  has(name: string): boolean
+  set(name: string, value: string): HttpHeadersBase
+  get(name: string): string
+  remove(name: string): HttpHeadersBase
+  forEach(fn: (name: string, value: string) => void)
+  toJSON(): Record<string, string>
+}
+
+/**
  * 请求头
  *
  * @class
@@ -18,7 +30,7 @@
  * 1. 请求头字段名不区分大小写。
  * ```
  */
-export class HttpHeaders {
+export class HttpHeaders implements HttpHeadersBase {
   private readonly headers = new Map<string, string>()
 
   constructor(init?: Record<string, string> | HttpHeaders) {
@@ -27,8 +39,8 @@ export class HttpHeaders {
         return init
       }
 
-      Object.keys(init).forEach((field: string) => {
-        this.set(field, init[field])
+      Object.keys(init).forEach((name: string) => {
+        this.set(name, init[name])
       })
     }
   }
@@ -36,7 +48,7 @@ export class HttpHeaders {
   /**
    * 检查是否存在指定请求头字段
    *
-   * @param field 请求头字段名
+   * @param name 请求头字段名
    *
    * @description
    * ```markdown
@@ -46,23 +58,23 @@ export class HttpHeaders {
    * @example
    * ```javascript
    * // 请求头存在则返回 `true`，否则返回 `false`
-   * console.log(myHeaders.has('exist_field'))  // true
-   * console.log(myHeaders.has('not_exist_field'))  // false
+   * console.log(myHeaders.has('exist_name'))  // true
+   * console.log(myHeaders.has('not_exist_name'))  // false
    * ```
    */
-  has(field: string): boolean {
-    return this.headers.has(field.toLowerCase())
+  has(name: string): boolean {
+    return this.headers.has(name.toLowerCase())
   }
 
   /**
    * 设置一个请求头字段
    *
-   * @param field 请求头字段名
-   * @param value 请求头的值
+   * @param name 请求头字段名
+   * @param value 请求头字段值
    *
    * @description
    * ```markdown
-   * 1. 如果设置的值为空，那么将不存存入。
+   * 1. 如果设置的值为空，那么将不会存入。
    * 2. 请求头字段名不区分大小写，例如：先设置了 `MyName` 字段，之后设置的 `myname` 将覆盖 `MyName` 字段的值。
    * 3. 该方法直接返回当前实例，可进行链式调用。
    * ```
@@ -71,15 +83,15 @@ export class HttpHeaders {
    * ```javascript
    * // 链式调用示例
    * myHeaders
-   *   .set('field-one', 'hello inlym')
-   *   .set('field-two', 'abcde')
-   *   .set('field-three', '1234567')
+   *   .set('name-one', 'hello inlym')
+   *   .set('name-two', 'abcde')
+   *   .set('name-three', '1234567')
    * ```
    */
-  set(field: string, value: string): HttpHeaders {
+  set(name: string, value: string): HttpHeaders {
     const stringifiedValue = String(value)
     if (stringifiedValue) {
-      this.headers.set(field.toLowerCase(), stringifiedValue)
+      this.headers.set(name.toLowerCase(), stringifiedValue)
     }
 
     return this
@@ -88,7 +100,7 @@ export class HttpHeaders {
   /**
    * 获取一个请求头字段的值
    *
-   * @param field 请求头字段名
+   * @param name 请求头字段名
    *
    * @description
    * ```markdown
@@ -96,14 +108,14 @@ export class HttpHeaders {
    * 2. 对应字段不存在将返回空字符串。
    * ```
    */
-  get(field: string): string {
-    return this.headers.get(field.toLowerCase()) || ''
+  get(name: string): string {
+    return this.headers.get(name.toLowerCase()) || ''
   }
 
   /**
    * 移除一个请求头字段
    *
-   * @param field 请求头字段名
+   * @param name 请求头字段名
    *
    * @description
    * ```markdown
@@ -116,19 +128,31 @@ export class HttpHeaders {
    * ```javascript
    * // 链式调用示例
    * myHeaders
-   *   .remove('field-one', 'hello inlym')
-   *   .remove('field-two', 'abcde')
-   *   .remove('field-three', '1234567')
+   *   .remove('name-one', 'hello inlym')
+   *   .remove('name-two', 'abcde')
+   *   .remove('name-three', '1234567')
    *
    * ```
    */
-  remove(field: string): HttpHeaders {
-    this.headers.delete(field.toLowerCase())
+  remove(name: string): HttpHeaders {
+    this.headers.delete(name.toLowerCase())
+
     return this
   }
 
   /**
-   * 输出一个可以转化为 `JSON` 的对象
+   * 生成一个迭代序列
+   *
+   * @param fn 回调函数
+   */
+  forEach(fn: (name: string, value: string) => void): void {
+    this.headers.forEach((value: string, name: string) => {
+      fn(name, value)
+    })
+  }
+
+  /**
+   * 输出一个可以转化为 JSON 的对象
    *
    * @description
    * ```markdown
@@ -137,9 +161,10 @@ export class HttpHeaders {
    */
   toJSON(): Record<string, string> {
     const result: Record<string, string> = {}
-    this.headers.forEach((value: string, field: string) => {
-      result[field] = value
+    this.headers.forEach((value: string, name: string) => {
+      result[name] = value
     })
+
     return result
   }
 }

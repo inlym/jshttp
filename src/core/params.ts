@@ -37,8 +37,8 @@ export class HttpParams {
         return init
       }
 
-      Object.keys(init).forEach((field: string) => {
-        this.set(field, init[field])
+      Object.keys(init).forEach((name: string) => {
+        this.set(name, init[name])
       })
     }
   }
@@ -46,18 +46,18 @@ export class HttpParams {
   /**
    * 设置请求参数
    */
-  set(field: string, value: string | number | boolean | Date): HttpParams {
-    this.params.set(field, value)
+  set(name: string, value: string | number | boolean | Date): HttpParams {
+    this.params.set(name, value)
     return this
   }
 
   /**
    * 查看一个请求参数的值（注意：值以字符串化）
    *
-   * @param field 字段名
+   * @param name 字段名
    */
-  get(field: string): string {
-    const origin = this.params.get(field)
+  get(name: string): string {
+    const origin = this.params.get(name)
     if (origin === undefined) {
       return ''
     }
@@ -67,26 +67,26 @@ export class HttpParams {
   /**
    * 获取请求参数的原始值
    *
-   * @param field 字段名
+   * @param name 字段名
    */
-  getOrigin(field: string): string | number | boolean | Date | undefined {
-    return this.params.get(field)
+  getOrigin(name: string): string | number | boolean | Date | undefined {
+    return this.params.get(name)
   }
 
   /**
    * 移除一个请求参数
    *
-   * @param field 字段名
+   * @param name 字段名
    */
-  remove(field: string): HttpParams {
-    this.params.delete(field)
+  remove(name: string): HttpParams {
+    this.params.delete(name)
     return this
   }
 
   toJSON(): Record<string, string> {
     const result: Record<string, string> = {}
-    this.params.forEach((value: string | number | boolean | Date, field: string) => {
-      result[field] = HttpParams.stringify(value)
+    this.params.forEach((value: string | number | boolean | Date, name: string) => {
+      result[name] = HttpParams.stringify(value)
     })
     return result
   }

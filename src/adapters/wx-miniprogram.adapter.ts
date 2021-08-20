@@ -34,7 +34,7 @@ export interface WxRequestOptions {
    * - 'TRACE': HTTP 请求 TRACE;
    * - 'CONNECT': HTTP 请求 CONNECT;
    */
-  method?: 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'TRACE' | 'CONNECT'
+  method?: 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE'
 
   /** 开发者服务器接口地址 */
   url: string
@@ -88,7 +88,7 @@ export interface wx {
 
 export function wxMiniprogramAdatper<T>(request: HttpRequest): Observable<HttpResponse> {
   const url = request.wholeUrl
-  const options: WxRequestOptions<T> = { url }
+  const options: WxRequestOptions = { url }
 
   options.method = request.method
   options.header = request.headers.toJSON()
@@ -102,16 +102,19 @@ export function wxMiniprogramAdatper<T>(request: HttpRequest): Observable<HttpRe
   }
 
   return new Observable((observer: Observer<HttpResponse>) => {
-    wx.request({
+    const executor = wx.request({
       ...options,
 
       /** 接口调用成功的回调函数 */
       success(res: WxRequestSuccessCallbackResult<T>): void {
+        request.executor = executor
+
         observer.next(
           new HttpResponse<T>({
             status: res.statusCode,
             headers: new HttpHeaders(res.header),
             data: res.data,
+            request,
           })
         )
         observer.complete()

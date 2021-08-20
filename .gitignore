@@ -21,3 +21,4 @@ package-lock.json
 
 # 输出目录
 dist/
+src/**/*.js

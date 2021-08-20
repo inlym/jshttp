@@ -56,15 +56,15 @@ describe('src/core/headers', () => {
     })
 
     test('使用 `set` 方法设置一个不存在的字段，设置成功', () => {
-      const field = 'myName2'
+      const name = 'myName2'
       const value = 'hello'
-      expect(myHeaders.set(field, value).get(field)).toBe(value)
+      expect(myHeaders.set(name, value).get(name)).toBe(value)
     })
 
     test('使用 `set` 方法设置一个已存在的字段，设置成功', () => {
-      const field = 'myName2'
+      const name = 'myName2'
       const value = 'hello2'
-      expect(myHeaders.set(field, value).get(field)).toBe(value)
+      expect(myHeaders.set(name, value).get(name)).toBe(value)
     })
   })
 
